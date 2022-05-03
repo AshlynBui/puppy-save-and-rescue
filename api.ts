@@ -130,11 +130,10 @@ export const getOwnerById = ((async (event) => {
 export const getLostPets = ((async (event) => {
     // Initialize the DB
     let db = await init();
-    const lostPetsQuery = db.prepare("SELECT * FROM pets LEFT join owners_pets WHERE pets.owner_id is NULL");
-    const result = lostPetsQuery.bind({':ownerid' : ownerId});
-
+    const result = db.exec("SELECT * FROM pets left join owners_pets where owners_pets.id != pets.id");
+    const prettyRestults = serialize(result);
     // TODO: Finish implementation here
 
-    return { statusCode: 200, body: JSON.stringify(lostPets) }
+    return { statusCode: 200, body: JSON.stringify(prettyRestults) }
 }))
 
